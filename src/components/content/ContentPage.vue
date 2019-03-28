@@ -34,8 +34,8 @@
             <div class="goods-show-info" v-for="(item, index) in buyedContetnList" :key="item.id">
               <div class="goods-show-img">
                 <router-link :to="{ path: '/content-detail-page', query: { contentId: item.id } }">
-                  <img :src="'static/images/'+item.goodsId+'/'+item.imagePath" v-if="item.imageType === 1"/>
-                  <img :src="item.imagePath" v-if="item.imageType === 0"/>
+                  <img  :src="'static/images/'+item.goodsId+'/'+item.imagePath" v-show="item.imageType === 1"/>
+                  <div v-html="'<img src='+'item.imagePath'+'/>'" v-show="item.imageType === 0"></div>
                 </router-link>
               </div>
               <div class="goods-show-price">
@@ -75,9 +75,22 @@
         buyedContetnList: [],
       }
     },
-    methods: {},
+    methods: {
+      getContentList(){
+        this.$http.get('/api/content/get_all_content_list').then(response =>{
+            this.allContentList = response.data.contentList;
+            console.log(response);
+        });
+      }
+    },
     computed: {
       ...mapGetters(['getUserInfo'])
+    },
+    created(){
+      this.getContentList();
+    },
+    mounted(){
+
     },
     store
   }

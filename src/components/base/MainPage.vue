@@ -32,7 +32,7 @@
           </div>
           <div style="float:right;" v-show="getUserInfo.userInfo.userType === 0||getUserInfo.userInfo.userType === '0'">
             <Menu mode="horizontal" theme="dark" active-name="1">
-              <MenuItem name="1" to="/main-page">
+              <MenuItem name="1" to="/content-page">
                 <Icon type="md-home"/>
                 首页
               </MenuItem>
@@ -72,7 +72,7 @@
           </div>
           <div style="float:right;" v-show="userType === 0||userType === '0'">
             <Menu mode="horizontal" theme="dark" active-name="1">
-              <MenuItem name="1" to="/main-page">
+              <MenuItem name="1" to="/content-page">
                 <Icon type="md-home"/>
                 首页
               </MenuItem>
@@ -135,9 +135,9 @@
       }
     },
     created() {
-      this.initData();
     },
     mounted() {
+      this.initData();
     },
     store
   }
