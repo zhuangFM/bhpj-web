@@ -9,7 +9,7 @@
         <Input v-model="contentData.summary" placeholder="2-140字符" style="width: 400px"></Input>
       </FormItem>
       <FormItem label="图片" prop="imageType">
-        <RadioGroup v-model="contentData.imageType">
+        <RadioGroup v-model:number="contentData.imageType">
           <Radio label="0">图片地址</Radio>
           <Radio label="1">本地上传</Radio>
         </RadioGroup>
@@ -18,9 +18,13 @@
         <Input v-model="contentData.imagePath" placeholder="图片URL" style="width: 400px"></Input>
       </FormItem>
       <FormItem label="本地图片" v-show="contentData.imageType === 1 || contentData.imageType === '1'">
-        <Upload action="">
+        <Upload
+          action=""
+          accept="image"
+          :before-upload="beforeUpload">
           <Button icon="ios-cloud-upload-outline">选择本地图片</Button>
         </Upload>
+        <div v-if="file !== null">待上传图片: {{ file.name }}</div>
       </FormItem>
       <FormItem label="正文" prop="detail">
         <Input v-model="contentData.detail" type="textarea" :autosize="{minRows: 4,maxRows: 8}" placeholder="2-1000字符"
@@ -64,7 +68,8 @@
           price: [
             {required: true, type: 'string', message: '请输入正确的价格', trigger: 'blur'}
           ],
-        }
+        },
+        file: null,
       }
     },
     methods: {
@@ -75,8 +80,12 @@
             this.showSpin();
             this.$http.post('/api/content/save_content', this.contentData).then(response => {
               console.log(response);
-              this.$Spin.hide();
-              this.$Message.success('发布成功!');
+              if (this.contentData.imageType === 1) {
+                this.uploading(response.data.content.id);
+              } else {
+                this.$Spin.hide();
+                this.$Message.success('发布成功!');
+              }
             });
           } else {
             this.$Message.error('发布失败!');
@@ -86,7 +95,7 @@
       handleReset(name) {
         this.$refs[name].resetFields();
       },
-      showSpin(){
+      showSpin() {
         this.$Spin.show({
           render: (h) => {
             return h('div', [
@@ -101,13 +110,25 @@
             ])
           }
         });
+      },
+      beforeUpload(file) {
+        this.file = file;
+        return false;
+      },
+      uploading(contentId) {
+        console.log("access upload image");
+        this.$http.post('/api/content/upload_content_image', {'file': this.file, 'id': contentId}).then(response => {
+          console.log(response);
+          this.$Spin.hide();
+          this.$Message.success('发布成功!');
+        });
       }
     }
   }
 </script>
 
 <style scoped>
-  .demo-spin-icon-load{
+  .demo-spin-icon-load {
     animation: ani-demo-spin 1s linear infinite;
   }
 </style>
