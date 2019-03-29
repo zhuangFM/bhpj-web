@@ -19,8 +19,12 @@
       </FormItem>
       <FormItem label="本地图片" v-show="contentData.imageType === 1 || contentData.imageType === '1'">
         <Upload
-          action=""
+          action="/api/content/upload_content_image"
+          ref="upload"
+          name="file"
           accept="image"
+          v-bind:data="{'id':currentContentId}"
+          :on-success="uploadSuccess"
           :before-upload="beforeUpload">
           <Button icon="ios-cloud-upload-outline">选择本地图片</Button>
         </Upload>
@@ -48,6 +52,7 @@
       return {
         contentData: {
           imageType: 0,
+          currentContentId: null,
         },
         ruleValidate: {
           title: [
@@ -80,8 +85,9 @@
             this.showSpin();
             this.$http.post('/api/content/save_content', this.contentData).then(response => {
               console.log(response);
-              if (this.contentData.imageType === 1) {
-                this.uploading(response.data.content.id);
+              this.currentContentId = response.data.content.id;
+              if (this.contentData.imageType == '1') {
+                this.uploading();
               } else {
                 this.$Spin.hide();
                 this.$Message.success('发布成功!');
@@ -115,13 +121,12 @@
         this.file = file;
         return false;
       },
-      uploading(contentId) {
-        console.log("access upload image");
-        this.$http.post('/api/content/upload_content_image', {'file': this.file, 'id': contentId}).then(response => {
-          console.log(response);
-          this.$Spin.hide();
-          this.$Message.success('发布成功!');
-        });
+      uploading() {
+        this.$refs.upload.post(this.file);
+      },
+      uploadSuccess(){
+        this.$Spin.hide();
+        this.$Message.success('发布成功!');
       }
     }
   }
