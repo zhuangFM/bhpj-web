@@ -3,7 +3,8 @@
     <div class="item-detail-show">
       <div class="item-detail-left">
         <div class="item-detail-big-img">
-          <img :src="'static/images/'+contentInfo.id+'/'+contentInfo.imagePath" alt="">
+          <img :src="'static/images/'+contentInfo.id+'/'+contentInfo.imagePath" alt="" v-show="contentInfo.imageType=='1'">
+          <img :src="contentInfo.imagePath" alt="" v-show="contentInfo.imageType=='0'">
         </div>
         <!--<div class="item-detail-img-row">-->
         <!--<div class="item-detail-img-small" v-for="(item, index) in contentInfo.goodsImg" :key="index"-->
@@ -13,10 +14,10 @@
         <!--</div>-->
       </div>
       <div class="item-detail-right">
-        <div class="item-detail-title">
-          <p>
-            <span class="item-detail-express">校园配送</span> {{contentInfo.title}}</p>
-        </div>
+        <!--<div class="item-detail-title">-->
+          <!--<p>-->
+            <!--<span class="item-detail-express">校园配送</span> {{contentInfo.title}}</p>-->
+        <!--</div>-->
         <!--<div class="item-detail-tag">-->
         <!--<p>-->
         <!--<span v-for="(item,index) in getGoodsDetailBase.tags" :key="index">【{{item}}】</span>-->
@@ -83,20 +84,42 @@
     data() {
       return {
         'currentContentId': null,
-        'contentInfo': {},
+        'contentInfo': {
+          'price':0,
+        },
+
       }
     },
     methods: {
       getContentInfo() {
-        this.$http.get('/content/get_content_by_id', {
+        this.showSpin();
+        this.$http.get('/api/content/get_content_by_id', {
           params: {
             'id': this.currentContentId,
           }
         }).then(response => {
+          this.$Spin.hide();
+          this.$Message.success('发布成功!');
           console.log(response);
-            this.contentInfo = response.data.content;
+          this.contentInfo = response.data.content;
         });
-      }
+      },
+      showSpin() {
+        this.$Spin.show({
+          render: (h) => {
+            return h('div', [
+              h('Icon', {
+                'class': 'demo-spin-icon-load',
+                props: {
+                  type: 'ios-loading',
+                  size: 18
+                }
+              }),
+              h('div', '正在加载....')
+            ])
+          }
+        });
+      },
     },
     created() {
       this.currentContentId = this.$route.query.contentId;
@@ -123,7 +146,7 @@
 
   .item-detail-big-img {
     width: 350px;
-    height: 350px;
+    /*height: 350px;*/
     box-shadow: 0px 0px 8px #ccc;
     cursor: pointer;
   }
