@@ -6,6 +6,8 @@ import LoginPage from '../components/base/LoginPage'
 import ContentPage from '../components/content/ContentPage'
 import ContentDetailPage from '../components/content/ContentDetailPage'
 import ContentPublishPage from '../components/content/ContentPublishPage'
+import ShoppingCartPage from '../components/shoppingcart/ShoppingCartPage'
+import TransactionRecordPage from '../components/transaction/TransactionRecordPage'
 
 Vue.use(Router)
 
@@ -30,6 +32,16 @@ export default new Router({
           path: '/content-publish-page',
           name: 'ContentPublishPage',
           component: ContentPublishPage
+        },
+        {
+          path: '/shopping-cart-page',
+          name: 'ShoppingCartPage',
+          component: ShoppingCartPage
+        },
+        {
+          path: '/transaction-record-page',
+          name: 'TransactionRecordPage',
+          component: TransactionRecordPage
         },
       ],
     },
@@ -57,6 +69,16 @@ export default new Router({
           path: '/content-publish-page',
           name: 'ContentPublishPage',
           component: ContentPublishPage
+        },
+        {
+          path: '/shopping-cart-page',
+          name: 'ShoppingCartPage',
+          component: ShoppingCartPage
+        },
+        {
+          path: '/transaction-record-page',
+          name: 'TransactionRecordPage',
+          component: TransactionRecordPage
         },
       ],
     },

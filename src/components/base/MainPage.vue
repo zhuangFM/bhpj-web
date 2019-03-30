@@ -6,31 +6,31 @@
         <div v-if="getUserInfo.isLogin">
           <div style="display:inline;float: left;color: #ffffff;">
             <Icon type="md-person"/>
-            <span v-show="getUserInfo.userInfo.userType === 1||getUserInfo.userInfo.userType === '1'">
+            <span v-show="getUserInfo.userInfo.userType == '1'">
                 欢迎买家，{{getUserInfo.userInfo.userName}}
               </span>
-            <span v-show="getUserInfo.userInfo.userType === 0||getUserInfo.userInfo.userType === '0'">
+            <span v-show="getUserInfo.userInfo.userType == '0'">
                 欢迎卖家，{{getUserInfo.userInfo.userName}}
               </span>
             <span @click="userLogout"><a>[退出]</a></span>
           </div>
-          <div style="float:right;" v-show="getUserInfo.userInfo.userType === 1||getUserInfo.userInfo.userType === '1'">
+          <div style="float:right;" v-show="getUserInfo.userInfo.userType == '1'">
             <Menu mode="horizontal" theme="dark" active-name="1">
-              <MenuItem name="1" to="/main-page">
+              <MenuItem name="1" to="/content-page">
                 <Icon type="md-home"/>
                 首页
               </MenuItem>
-              <MenuItem name="2" to="/main-page">
+              <MenuItem name="2" to="/transaction-record-page">
                 <Icon type="md-appstore"/>
                 财务
               </MenuItem>
-              <MenuItem name="3" to="/main-page">
+              <MenuItem name="3" to="/shopping-cart-page">
                 <Icon type="md-cart"/>
                 购物车
               </MenuItem>
             </Menu>
           </div>
-          <div style="float:right;" v-show="getUserInfo.userInfo.userType === 0||getUserInfo.userInfo.userType === '0'">
+          <div style="float:right;" v-show="getUserInfo.userInfo.userType == '0'">
             <Menu mode="horizontal" theme="dark" active-name="1">
               <MenuItem name="1" to="/content-page">
                 <Icon type="md-home"/>
@@ -46,31 +46,31 @@
         <div v-else-if="isLogin">
           <div style="display:inline;float: left;color: #ffffff;">
             <Icon type="md-person"/>
-            <span v-show="userType === 0||userType === '0'">
+            <span v-show="userType =='0'">
                 欢迎卖家，{{userName}}
               </span>
-            <span v-show="userType === 1||userType === '1'">
+            <span v-show="userType == '1'">
                 欢迎买家，{{userName}}
               </span>
             <span @click="userLogout"><a>[退出]</a></span>
           </div>
-          <div style="float:right;" v-show="userType === 1||userType === '1'">
+          <div style="float:right;" v-show="userType == '1'">
             <Menu mode="horizontal" theme="dark" active-name="1">
-              <MenuItem name="1" to="/main-page">
+              <MenuItem name="1" to="/content-page">
                 <Icon type="md-home"/>
                 首页
               </MenuItem>
-              <MenuItem name="2" to="/main-page">
+              <MenuItem name="2" to="/transaction-record-page">
                 <Icon type="md-appstore"/>
                 财务
               </MenuItem>
-              <MenuItem name="3" to="/main-page">
+              <MenuItem name="3" to="/shopping-cart-page">
                 <Icon type="md-cart"/>
                 购物车
               </MenuItem>
             </Menu>
           </div>
-          <div style="float:right;" v-show="userType === 0||userType === '0'">
+          <div style="float:right;" v-show="userType == '0'">
             <Menu mode="horizontal" theme="dark" active-name="1">
               <MenuItem name="1" to="/content-page">
                 <Icon type="md-home"/>

@@ -3,7 +3,8 @@
     <div class="item-detail-show">
       <div class="item-detail-left">
         <div class="item-detail-big-img">
-          <img :src="'static/images/'+contentInfo.id+'/'+contentInfo.imagePath" alt="" v-show="contentInfo.imageType=='1'">
+          <img :src="'static/images/'+contentInfo.id+'/'+contentInfo.imagePath" alt=""
+               v-show="contentInfo.imageType=='1'">
           <img :src="contentInfo.imagePath" alt="" v-show="contentInfo.imageType=='0'">
         </div>
         <!--<div class="item-detail-img-row">-->
@@ -14,10 +15,15 @@
         <!--</div>-->
       </div>
       <div class="item-detail-right">
-        <!--<div class="item-detail-title">-->
-          <!--<p>-->
-            <!--<span class="item-detail-express">校园配送</span> {{contentInfo.title}}</p>-->
-        <!--</div>-->
+        <div class="item-detail-title">
+          <p>
+            <!--<span class="item-detail-express">校园配送</span> -->
+            {{contentInfo.title}}
+          </p>
+          <small>
+            {{contentInfo.summary}}
+          </small>
+        </div>
         <!--<div class="item-detail-tag">-->
         <!--<p>-->
         <!--<span v-for="(item,index) in getGoodsDetailBase.tags" :key="index">【{{item}}】</span>-->
@@ -68,27 +74,40 @@
         <!--</div>-->
         <br>
         <div class="add-buy-car-box">
-          <div class="add-buy-car">
+          <div class="add-buy-car" v-show="getUserInfo.userInfo.userType=='1'">
             <InputNumber :min="1" v-model="count" size="large"></InputNumber>
-            <Button type="error" size="large" @click="addShoppingCartBtn()">加入购物车</Button>
+            <Button type="error" size="large" @click="addShoppingCartBtn()" >加入购物车</Button>
+          </div>
+          <div class="add-buy-car" v-show="getUserInfo.userInfo.userType=='0'">
+            <Button type="error" size="large" @click="editContent()">编辑</Button>
           </div>
         </div>
       </div>
     </div>
+    <div class="content-detail">
+      <Divider>正文</Divider>
+      <h2>{{contentInfo.detail}}</h2>
+    </div>
   </div>
+
 </template>
 
 <script>
+  import store from '@/vuex/store';
+  import {mapActions, mapGetters} from 'vuex';
   export default {
     name: "ContentDetailPage",
     data() {
       return {
         'currentContentId': null,
         'contentInfo': {
-          'price':0,
+          'price': 0,
         },
 
       }
+    },
+    computed: {
+      ...mapGetters(['getUserInfo'])
     },
     methods: {
       getContentInfo() {
@@ -99,7 +118,6 @@
           }
         }).then(response => {
           this.$Spin.hide();
-          this.$Message.success('发布成功!');
           console.log(response);
           this.contentInfo = response.data.content;
         });
@@ -120,12 +138,15 @@
           }
         });
       },
+      editContent(){
+        this.$router.push({path:'/content-publish-page',query:{'contentInfo':this.contentInfo}});
+      }
     },
     created() {
       this.currentContentId = this.$route.query.contentId;
       this.getContentInfo();
-    }
-
+    },
+    store
   }
 </script>
 
@@ -139,6 +160,13 @@
     background-color: #fff;
   }
 
+  .content-detail {
+    background-color: #fff;
+    margin: 15px auto;
+    width: 80%;
+
+  }
+
   .item-detail-left {
     width: 350px;
     margin-right: 30px;
@@ -146,7 +174,7 @@
 
   .item-detail-big-img {
     width: 350px;
-    /*height: 350px;*/
+    height: auto;
     box-shadow: 0px 0px 8px #ccc;
     cursor: pointer;
   }

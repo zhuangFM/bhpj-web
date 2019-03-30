@@ -52,8 +52,12 @@
       return {
         contentData: {
           imageType: 0,
-          currentContentId: null,
+          title:'',
+          price:0,
+          detail:'',
+          summary:''
         },
+        currentContentId: null,
         ruleValidate: {
           title: [
             {required: true, type: 'string', min: 2, max: 80, message: '输入有误', trigger: 'blur'}
@@ -91,6 +95,7 @@
               } else {
                 this.$Spin.hide();
                 this.$Message.success('发布成功!');
+                this.$router.push({path:'/content-page'});
               }
             });
           } else {
@@ -121,12 +126,23 @@
         this.file = file;
         return false;
       },
+      getConcurrentContentid(){
+        return this.currentContentId;
+      },
       uploading() {
         this.$refs.upload.post(this.file);
       },
       uploadSuccess(){
         this.$Spin.hide();
         this.$Message.success('发布成功!');
+        this.$router.push({path:'/content-page'});
+      }
+    },
+    created() {
+      var editInfo = this.$route.query;
+      if(editInfo.contentInfo){
+        console.log(editInfo)
+        this.contentData = editInfo.contentInfo;
       }
     }
   }

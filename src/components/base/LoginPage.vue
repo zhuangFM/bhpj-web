@@ -50,7 +50,7 @@
         var father = this;
         this.$refs[name].validate((valid) => {
           if (valid) {
-            var loginData = {userType: 0, userName: 'buyer',isLogin:true};
+            var loginData = {userType: 1, userName: 'buyer',isLogin:true};
             this.login(loginData).then(data => {
               if (data) {
                 this.$Message.success('登录成功!');
