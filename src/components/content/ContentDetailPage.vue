@@ -74,11 +74,13 @@
         <!--</div>-->
         <br>
         <div class="add-buy-car-box">
-          <div class="add-buy-car" v-show="getUserInfo.userInfo.userType=='1'">
+          <div class="add-buy-car"
+               v-if="userInfo.userType=='1'||getUserInfo.userInfo.userType=='1'">
             <InputNumber :min="1" v-model="count" size="large"></InputNumber>
-            <Button type="error" size="large" @click="addShoppingCartBtn()" >加入购物车</Button>
+            <Button type="error" size="large" @click="addShoppingCartBtn()">加入购物车</Button>
           </div>
-          <div class="add-buy-car" v-show="getUserInfo.userInfo.userType=='0'">
+          <div class="add-buy-car"
+               v-else-if="userInfo.userType=='0'||getUserInfo.userInfo.userType=='0'">
             <Button type="error" size="large" @click="editContent()">编辑</Button>
           </div>
         </div>
@@ -94,7 +96,8 @@
 
 <script>
   import store from '@/vuex/store';
-  import {mapActions, mapGetters} from 'vuex';
+  import {mapActions, mapState, mapGetters} from 'vuex';
+
   export default {
     name: "ContentDetailPage",
     data() {
@@ -103,11 +106,13 @@
         'contentInfo': {
           'price': 0,
         },
-
+        count: 1,
+        'userType': null,
       }
     },
     computed: {
-      ...mapGetters(['getUserInfo'])
+      ...mapGetters(['getUserInfo']),
+      ...mapState(['userInfo']),
     },
     methods: {
       getContentInfo() {
@@ -138,12 +143,26 @@
           }
         });
       },
-      editContent(){
-        this.$router.push({path:'/content-publish-page',query:{'contentInfo':this.contentInfo}});
+      editContent() {
+        this.$router.push({path: '/content-publish-page', query: {'contentInfo': this.contentInfo}});
+      },
+      addShoppingCartBtn() {
+        if (confirm("是否加入购物车？")) {
+          this.$http.post('/api/shoppingCart/save_shoppingCart', {
+            'contentId': this.currentContentId,
+            'amount': this.count,
+            'userId': this.userInfo.userId,
+          }).then(response => {
+            console.log(response);
+            this.$Message.success('加入购物车成功!');
+            this.$router.push({path: '/shopping-cart-page'});
+          });
+        }
       }
     },
     created() {
       this.currentContentId = this.$route.query.contentId;
+      this.userType = this.$route.query.userType;
       this.getContentInfo();
     },
     store

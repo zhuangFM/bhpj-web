@@ -3,47 +3,7 @@
     <Layout>
       <Header>
         <!--<div class="layout-logo"></div>-->
-        <div v-if="getUserInfo.isLogin">
-          <div style="display:inline;float: left;color: #ffffff;">
-            <Icon type="md-person"/>
-            <span v-show="getUserInfo.userInfo.userType == '1'">
-                欢迎买家，{{getUserInfo.userInfo.userName}}
-              </span>
-            <span v-show="getUserInfo.userInfo.userType == '0'">
-                欢迎卖家，{{getUserInfo.userInfo.userName}}
-              </span>
-            <span @click="userLogout"><a>[退出]</a></span>
-          </div>
-          <div style="float:right;" v-show="getUserInfo.userInfo.userType == '1'">
-            <Menu mode="horizontal" theme="dark" active-name="1">
-              <MenuItem name="1" to="/content-page">
-                <Icon type="md-home"/>
-                首页
-              </MenuItem>
-              <MenuItem name="2" to="/transaction-record-page">
-                <Icon type="md-appstore"/>
-                财务
-              </MenuItem>
-              <MenuItem name="3" to="/shopping-cart-page">
-                <Icon type="md-cart"/>
-                购物车
-              </MenuItem>
-            </Menu>
-          </div>
-          <div style="float:right;" v-show="getUserInfo.userInfo.userType == '0'">
-            <Menu mode="horizontal" theme="dark" active-name="1">
-              <MenuItem name="1" to="/content-page">
-                <Icon type="md-home"/>
-                首页
-              </MenuItem>
-              <MenuItem name="2" to="/content-publish-page">
-                <Icon type="md-cloud-upload"/>
-                发布
-              </MenuItem>
-            </Menu>
-          </div>
-        </div>
-        <div v-else-if="isLogin">
+        <div v-if="isLogin">
           <div style="display:inline;float: left;color: #ffffff;">
             <Icon type="md-person"/>
             <span v-show="userType =='0'">
@@ -56,7 +16,7 @@
           </div>
           <div style="float:right;" v-show="userType == '1'">
             <Menu mode="horizontal" theme="dark" active-name="1">
-              <MenuItem name="1" to="/content-page">
+              <MenuItem name="1" :to="{path:'/content-page',query:{type:1,userId:userId}}">
                 <Icon type="md-home"/>
                 首页
               </MenuItem>
@@ -72,7 +32,47 @@
           </div>
           <div style="float:right;" v-show="userType == '0'">
             <Menu mode="horizontal" theme="dark" active-name="1">
-              <MenuItem name="1" to="/content-page">
+              <MenuItem name="1" :to="{path:'/content-page',query:{type:0,userId:userId}}">
+                <Icon type="md-home"/>
+                首页
+              </MenuItem>
+              <MenuItem name="2" to="/content-publish-page">
+                <Icon type="md-cloud-upload"/>
+                发布
+              </MenuItem>
+            </Menu>
+          </div>
+        </div>
+        <div v-else-if="getUserInfo.isLogin">
+          <div style="display:inline;float: left;color: #ffffff;">
+            <Icon type="md-person"/>
+            <span v-show="getUserInfo.userInfo.userType == '1'">
+                欢迎买家，{{getUserInfo.userInfo.userName}}
+              </span>
+            <span v-show="getUserInfo.userInfo.userType == '0'">
+                欢迎卖家，{{getUserInfo.userInfo.userName}}
+              </span>
+            <span @click="userLogout"><a>[退出]</a></span>
+          </div>
+          <div style="float:right;" v-show="getUserInfo.userInfo.userType == '1'">
+            <Menu mode="horizontal" theme="dark" active-name="1">
+              <MenuItem name="1" :to="{path:'/content-page',query:{type:1,userId:getUserInfo.userInfo.userId}}">
+                <Icon type="md-home"/>
+                首页
+              </MenuItem>
+              <MenuItem name="2" to="/transaction-record-page">
+                <Icon type="md-appstore"/>
+                财务
+              </MenuItem>
+              <MenuItem name="3" to="/shopping-cart-page">
+                <Icon type="md-cart"/>
+                购物车
+              </MenuItem>
+            </Menu>
+          </div>
+          <div style="float:right;" v-show="getUserInfo.userInfo.userType == '0'">
+            <Menu mode="horizontal" theme="dark" active-name="1">
+              <MenuItem name="1" :to="{path:'/content-page',query:{type:1,userId:getUserInfo.userInfo.userId}}">
                 <Icon type="md-home"/>
                 首页
               </MenuItem>
@@ -84,9 +84,9 @@
           </div>
         </div>
         <div v-else>
-          <router-link to="/login-page"  style="color: #ffffff;">
-              <Icon type="md-person"/>
-              请[登陆]
+          <router-link to="/login-page" style="color: #ffffff;">
+            <Icon type="md-person"/>
+            请[登陆]
           </router-link>
         </div>
       </Header>
@@ -110,6 +110,7 @@
         'isLogin': false,
         'userType': '',
         'userName': '',
+        'userId': '',
       }
     },
     computed: {
@@ -130,8 +131,12 @@
         this.isLogin = this.$route.query.isLogin;
         this.userName = this.$route.query.userName;
         this.userType = this.$route.query.userType;
-        console.log(this.userType);
-        this.$router.push({path: '/content-page', query: {"userId": 1}});
+        this.userId = this.$route.query.userId;
+        console.log('userType:' + this.userType);
+        var father = this;
+        setTimeout(function () {
+          father.$router.push({path: '/content-page', query: {"userId": father.userId, "type": father.userType}});
+        }, 1000);
       }
     },
     created() {
