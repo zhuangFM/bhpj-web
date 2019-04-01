@@ -7,7 +7,7 @@
             <div class="goods-show-info" v-for="(item, index) in allContentList" :key="item.id">
               <div class="goods-show-img">
                 <router-link :to="{ path: '/content-detail-page', query: { contentId: item.id,userType:userType } }">
-                  <img :src="'static/images/'+item.goodsId+'/'+item.imagePath" v-if="item.imageType === 1" style="height: 150px;"/>
+                  <img :src="'static/images/'+item.id+'/'+item.imagePath" v-if="item.imageType === 1" style="height: 150px;"/>
                   <img :src="item.imagePath" v-if="item.imageType === 0" style="height: 150px;"/>
                 </router-link>
               </div>

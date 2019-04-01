@@ -23,7 +23,6 @@
           ref="upload"
           name="file"
           accept="image"
-          v-bind:data="{'id':currentContentId}"
           :on-success="uploadSuccess"
           :before-upload="beforeUpload">
           <Button icon="ios-cloud-upload-outline">选择本地图片</Button>
@@ -126,10 +125,8 @@
         this.file = file;
         return false;
       },
-      getConcurrentContentid(){
-        return this.currentContentId;
-      },
       uploading() {
+        this.$refs.upload.data = {'id':this.currentContentId};
         this.$refs.upload.post(this.file);
       },
       uploadSuccess(){
