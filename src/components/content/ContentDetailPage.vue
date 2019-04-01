@@ -75,12 +75,15 @@
         <br>
         <div class="add-buy-car-box">
           <div class="add-buy-car"
-               v-if="userInfo.userType=='1'||getUserInfo.userInfo.userType=='1'">
+               v-if="userInfo.userType=='1'">
             <InputNumber :min="1" v-model="count" size="large"></InputNumber>
-            <Button type="error" size="large" @click="addShoppingCartBtn()">加入购物车</Button>
+            <Button type="error" size="large"
+                    v-if="contentInfo.buyerId !=null && contentInfo.buyerId.indexOf(userInfo.userId)>-1" disabled>已购买
+            </Button>
+            <Button type="error" size="large" @click="addShoppingCartBtn()" v-else>加入购物车</Button>
           </div>
           <div class="add-buy-car"
-               v-else-if="userInfo.userType=='0'||getUserInfo.userInfo.userType=='0'">
+               v-else-if="userInfo.userType=='0'">
             <Button type="error" size="large" @click="editContent()">编辑</Button>
           </div>
         </div>

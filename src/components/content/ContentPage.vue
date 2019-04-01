@@ -7,7 +7,8 @@
             <div class="goods-show-info" v-for="(item, index) in allContentList" :key="item.id">
               <div class="goods-show-img">
                 <router-link :to="{ path: '/content-detail-page', query: { contentId: item.id,userType:userType } }">
-                  <img :src="'static/images/'+item.id+'/'+item.imagePath" v-if="item.imageType === 1" style="height: 150px;"/>
+                  <img :src="'static/images/'+item.id+'/'+item.imagePath" v-if="item.imageType === 1"
+                       style="height: 150px;"/>
                   <img :src="item.imagePath" v-if="item.imageType === 0" style="height: 150px;"/>
                 </router-link>
               </div>
@@ -23,19 +24,23 @@
               <div class="goods-show-num">
                 已有<span>{{item.selled || 0}}</span>人购买
               </div>
+              <Tag checkable color="error" v-if="item.buyerId != null && item.buyerId.indexOf(userInfo.userId)>-1 ">
+                已购买
+              </Tag>
               <!--<div class="goods-show-seller">-->
               <!--<span>{{item.merchantName}}</span>-->
               <!--</div>-->
             </div>
           </div>
         </TabPane>
-        <TabPane label="已购买" name="name2" v-if="getUserInfo.isLogin">
+        <TabPane label="已购买" name="name2" v-if=" isLogin && userInfo.userType =='1'">
           <div class="goods-list">
             <div class="goods-show-info" v-for="(item, index) in buyedContetnList" :key="item.id">
               <div class="goods-show-img">
-                <router-link :to="{ path: '/content-detail-page', query: { contentId: item.id } }">
-                  <img  :src="'static/images/'+item.goodsId+'/'+item.imagePath" v-show="item.imageType === 1"/>
-                  <div v-html="'<img src='+'item.imagePath'+'/>'" v-show="item.imageType === 0"></div>
+                <router-link :to="{ path: '/content-detail-page', query: { contentId: item.id,userType:userType } }">
+                  <img :src="'static/images/'+item.id+'/'+item.imagePath" v-if="item.imageType === 1"
+                       style="height: 150px;"/>
+                  <img :src="item.imagePath" v-if="item.imageType === 0" style="height: 150px;"/>
                 </router-link>
               </div>
               <div class="goods-show-price">
@@ -50,6 +55,9 @@
               <div class="goods-show-num">
                 已有<span>{{item.selled || 0}}</span>人购买
               </div>
+              <Tag checkable color="error" v-if="item.buyerId != null && item.buyerId.indexOf(userInfo.userId)>-1 ">
+                已购买
+              </Tag>
               <!--<div class="goods-show-seller">-->
               <!--<span>{{item.merchantName}}</span>-->
               <!--</div>-->
@@ -64,36 +72,43 @@
 
 <script>
   import store from '@/vuex/store';
-  import {mapGetters} from 'vuex';
+  import {mapGetters, mapState} from 'vuex';
 
   export default {
     name: "ContentPage",
     data() {
       return {
-        'isLogin': false,
         'allContentList': [],
         'buyedContetnList': [],
-        'userId':0,
-        'userType':0
+        'userId': 0,
+        'userType': 0
       }
     },
     methods: {
-      getContentList(){
-        this.$http.get('/api/content/get_all_content_list').then(response =>{
-            this.allContentList = response.data.contentList;
-            console.log(response);
+      getContentList() {
+        this.$http.get('/api/content/get_all_content_list').then(response => {
+          this.allContentList = response.data.contentList;
+          for (var i in this.allContentList) {
+            const item = this.allContentList[i];
+            if (item.buyerId != null && item.buyerId.indexOf(this.userInfo.userId) > -1) {
+              this.buyedContetnList.push(item);
+            }
+          }
+          console.log(response);
         });
       }
     },
     computed: {
-      ...mapGetters(['getUserInfo'])
+      ...mapGetters(['getUserInfo']),
+      ...mapState(['userInfo']),
+      ...mapState(['isLogin']),
     },
-    created(){
+    created() {
       this.userId = this.$route.query.userId;
       this.userType = this.$route.query.type;
       this.getContentList();
     },
-    mounted(){
+    mounted() {
 
     },
     store

@@ -1,7 +1,7 @@
 <template>
   <div>
     <Divider>已购买内容</Divider>
-    <Table :columns="columns1" :data="data1"></Table>
+    <Table :columns="columns1" :loading="loading" :data="data1"></Table>
   </div>
 </template>
 
@@ -14,6 +14,7 @@
         return{
           columns1: [
             {
+              type:'html',
               title: '内容图片',
               key: 'contentImagePath'
             },
@@ -34,7 +35,8 @@
               key: 'singlePrice'
             }
           ],
-          data1: []
+          data1: [],
+          loading:true,
         }
       },
       computed: {
@@ -49,7 +51,17 @@
                 }
               }
             ).then(response=>{
+              this.loading = false;
               this.data1 = response.data.transactionRecordInfoList;
+              for(var i in this.data1){
+                const item = this.data1[i];
+                if(item.contentImageType == '0'){
+                  item.contentImagePath = "<img src='"+item.contentImagePath+"' style='width:50px;height:50px;'/>";
+                }
+                else{
+                  item.contentImagePath = "<img src='static/images/"+item.contentId+"/"+item.contentImagePath+"' />";
+                }
+              }
             })
           }
       },

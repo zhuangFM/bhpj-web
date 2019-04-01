@@ -1,7 +1,7 @@
 <template>
   <div>
     <Divider>购物车</Divider>
-    <Table :columns="columns1" :data="data1"></Table>
+    <Table :columns="columns1" :loading="loading" :data="data1"></Table>
     <Button type="error" @click="buyAllItem">购买</Button>
   </div>
 </template>
@@ -29,7 +29,8 @@
           }
         ],
         tableData: [],
-        data1: []
+        data1: [],
+        loading:true,
       }
     },
     computed: {
@@ -45,6 +46,7 @@
             }
           }
         ).then(response => {
+          this.loading = false;
           this.data1 = response.data.shoppingCartInfoList;
         })
       },
