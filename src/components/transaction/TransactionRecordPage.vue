@@ -59,7 +59,7 @@
                   item.contentImagePath = "<img src='"+item.contentImagePath+"' style='width:50px;height:50px;'/>";
                 }
                 else{
-                  item.contentImagePath = "<img src='static/images/"+item.contentId+"/"+item.contentImagePath+"' />";
+                  item.contentImagePath = "<img src='static/images/"+item.contentId+"/"+item.contentImagePath+"' style='width:50px;height:50px;' />";
                 }
               }
             })

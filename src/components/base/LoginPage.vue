@@ -3,7 +3,7 @@
     <Card :bordered="false" :style="{textAlign:'center',width:''}">
 
       <h3 slot="title">用 户 登 录</h3>
-      <Form ref="formRef" :model="dataForm" :rules="ruleInline" style="width: 500px;margin-left: 670px;">
+      <Form ref="formRef" :model="dataForm" :rules="ruleInline" style="width: 400px;margin-left: 35%;">
         <FormItem prop="uname">
           <Input type="text" v-model="dataForm.uname" placeholder="用户名">
             <Icon type="ios-person-outline" slot="prepend"></Icon>
